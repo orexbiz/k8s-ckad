@@ -3,6 +3,7 @@
 #.EXPORT_ALL_VARIABLES:
 INFRA_DIR = ./iac-for-labs
 TF_OUTPUT_CONTROL_PLANE_IP_NAME = vm1-ip
+TF_OUTPUT_CONTROL_PLANE_PRIVATE_IP_NAME = vm1-private-ip
 TF_OUTPUT_WORKER_NODE_IP_NAME = vm2-ip
 TF_VM_USER ?= k8slab_2VMS
 TF_VM_USER_PASSWD ?= k8slab_2VMS_576
@@ -27,9 +28,12 @@ configure-infra:
 	@echo "---------------------------------"
 	@set -e
 	@cd ansible
-	@./config.sh ${TF_OUTPUT_CONTROL_PLANE_IP_NAME} ${TF_OUTPUT_WORKER_NODE_IP_NAME} ${TF_VM_USER} ${TF_VM_USER_PASSWD}
+	@./config-inventory.sh ${TF_OUTPUT_CONTROL_PLANE_IP_NAME} ${TF_OUTPUT_WORKER_NODE_IP_NAME} ${TF_VM_USER} ${TF_VM_USER_PASSWD}
 	@./play.sh ${LF_USER_NAME} ${LF_USER_PASSWORD}
 	@if [ -f "/tmp/join-command.sh" ]; then rm /tmp/join-command.sh; fi
+	@./config-kubectl.sh ${TF_OUTPUT_CONTROL_PLANE_IP_NAME} ${TF_OUTPUT_CONTROL_PLANE_PRIVATE_IP_NAME}
+	@echo "run kubectl get nodes"
+	@kubectl get nodes
 
 destroy-infra:
 	@echo "---------------------------------"

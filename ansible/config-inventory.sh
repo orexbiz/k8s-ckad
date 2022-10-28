@@ -25,10 +25,10 @@ function configure_inventory {
 
     local _USR_="$3"
     local _PASSWD_="$4"
-    sed -i s/_CONTROL_NODE_IP_/${CP_IP}/g ${INVENTORY_FILE}
-    sed -i s/_WORKER_NODE_IP_/${WK_IP}/g ${INVENTORY_FILE}
-    sed -i s/_USER_NAME_/${_USR_}/g ${INVENTORY_FILE}
-    sed -i s/_USER_PASSWD_/${_PASSWD_}/g ${INVENTORY_FILE}
+    sed -i s/_CONTROL_NODE_IP_/${CP_IP}/g   ${INVENTORY_FILE}
+    sed -i s/_WORKER_NODE_IP_/${WK_IP}/g    ${INVENTORY_FILE}
+    sed -i s/_USER_NAME_/${_USR_}/g         ${INVENTORY_FILE}
+    sed -i s/_USER_PASSWD_/${_PASSWD_}/g    ${INVENTORY_FILE}
 
     ansible-inventory -i ${INVENTORY_FILE} --list
 }
