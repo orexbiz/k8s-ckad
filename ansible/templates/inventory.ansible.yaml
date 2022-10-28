@@ -1,0 +1,22 @@
+control_plane:
+  hosts:
+    azure_vm_cp:
+      ansible_host: _CONTROL_NODE_IP_
+  vars:
+    ansible_user: _USER_NAME_
+    ansible_ssh_pass: _USER_PASSWD_
+    ansible_connection: ssh
+
+worker_nodes:
+  hosts:
+    azure_vm_wk:
+      ansible_host: _WORKER_NODE_IP_
+  vars:
+    ansible_user: _USER_NAME_
+    ansible_ssh_pass: _USER_PASSWD_
+    ansible_connection: ssh
+
+datacenter:
+  children:
+    control_plane:
+    worker_nodes:

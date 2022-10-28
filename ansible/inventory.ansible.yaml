@@ -1,0 +1,22 @@
+control_plane:
+  hosts:
+    azure_vm_cp:
+      ansible_host: 20.160.32.74
+  vars:
+    ansible_user: k8slab_2VMS
+    ansible_ssh_pass: k8slab_2VMS_576
+    ansible_connection: ssh
+
+worker_nodes:
+  hosts:
+    azure_vm_wk:
+      ansible_host: 20.16.65.46
+  vars:
+    ansible_user: k8slab_2VMS
+    ansible_ssh_pass: k8slab_2VMS_576
+    ansible_connection: ssh
+
+datacenter:
+  children:
+    control_plane:
+    worker_nodes:
