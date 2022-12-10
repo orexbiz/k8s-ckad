@@ -11,8 +11,13 @@ TF_VM_USER_PASSWD ?= k8slab_2VMS_576
 LF_USER_NAME ?= LFtraining
 LF_USER_PASSWORD ?= Penguin2014
 
+__help:
+	@echo "---------------------------------"
+	@echo "Help:"
+	@echo "	make <target>"
+
 .ONESHELL:
---all: build-infra configure-infra
+__all: build-infra configure-infra configure-cluster
 	@echo "---------------------------------"
 
 build-infra:
@@ -34,6 +39,15 @@ configure-infra:
 	@./config-kubectl.sh ${TF_OUTPUT_CONTROL_PLANE_IP_NAME} ${TF_OUTPUT_CONTROL_PLANE_PRIVATE_IP_NAME}
 	@echo "run kubectl get nodes"
 	@kubectl get nodes
+
+configure-cluster:
+	@echo "---------------------------------"
+	@set -e
+	@echo "make all nodes accept deployment of pods"
+	@kubectl taint nodes --all node-role.kubernetes.io/control-plane:NoSchedule- || echo ""
+	@kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule- || echo ""
+	@kubectl describe node | grep -i taint
+
 
 destroy-infra:
 	@echo "---------------------------------"
