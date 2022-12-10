@@ -14,3 +14,10 @@ output "vm2-private-ip" {
   value = module.vm2.privateip
 }
 
+output "vm3-ip" {
+  value = module.vm3.publicip
+}
+
+output "vm3-private-ip" {
+  value = module.vm3.privateip
+}

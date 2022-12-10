@@ -52,3 +52,13 @@ module "vm2" {
   username    = var.username
   password    = var.password
 }
+
+module "vm3" {
+  source      = "./modules/vm"
+  resource_gr = azurerm_resource_group.rg.name
+  location    = azurerm_resource_group.rg.location
+  name        = "workernode-vm-2"
+  sub_net     = azurerm_subnet.subbnet.id
+  username    = var.username
+  password    = var.password
+}

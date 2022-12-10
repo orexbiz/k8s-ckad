@@ -11,6 +11,8 @@ worker_nodes:
   hosts:
     azure_vm_wk:
       ansible_host: _WORKER_NODE_IP_
+    azure_vm_wk2:
+      ansible_host: _WORKER_NODE_2_IP_
   vars:
     ansible_user: _USER_NAME_
     ansible_ssh_pass: _USER_PASSWD_
