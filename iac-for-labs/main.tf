@@ -14,7 +14,7 @@ provider "azurerm" {
 
 
 resource "azurerm_resource_group" "rg" {
-  name     = "ckad-labs"
+  name     = var.resource_group_name
   location = "West Europe"
 }
 

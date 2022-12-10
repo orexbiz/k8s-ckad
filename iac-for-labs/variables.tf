@@ -5,3 +5,8 @@ variable "username" {
 variable "password" {
   default = "k8slab-CKAD"
 }
+
+variable "resource_group_name" {
+  type = string
+  default = "ckad-labs"
+}
