@@ -1,11 +1,11 @@
 .PHONY: build-infra configure-infra destroy-infra
 
 #.EXPORT_ALL_VARIABLES:
-INFRA_DIR = ./iac-for-labs
-TF_OUTPUT_CONTROL_PLANE_IP_NAME = vm1-ip
-TF_OUTPUT_CONTROL_PLANE_PRIVATE_IP_NAME = vm1-private-ip
-TF_OUTPUT_WORKER_NODE_IP_NAME = vm2-ip
-TF_OUTPUT_WORKER_NODE_2_IP_NAME = vm3-ip
+INFRA_DIR = ./terraform
+TF_OUTPUT_CONTROL_PLANE_IP_NAME = vm-a-public-ip
+TF_OUTPUT_CONTROL_PLANE_PRIVATE_IP_NAME = vm-a-private-ip
+TF_OUTPUT_WORKER_NODE_IP_NAME = vm-b-public-ip
+TF_OUTPUT_WORKER_NODE_2_IP_NAME = vm-c-public-ip
 TF_VM_USER ?= k8slab_2VMS
 TF_VM_USER_PASSWD ?= k8slab_2VMS_576
 

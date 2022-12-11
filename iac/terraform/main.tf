@@ -33,31 +33,31 @@ resource "azurerm_subnet" "subbnet" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-module "vm1" {
+module "vm-a" {
   source      = "./modules/vm"
   resource_gr = azurerm_resource_group.rg.name
   location    = azurerm_resource_group.rg.location
-  name        = "control-plane-vm"
+  name        = var.vm-a-name
   sub_net     = azurerm_subnet.subbnet.id
   username    = var.username
   password    = var.password
 }
 
-module "vm2" {
+module "vm-b" {
   source      = "./modules/vm"
   resource_gr = azurerm_resource_group.rg.name
   location    = azurerm_resource_group.rg.location
-  name        = "workernode-vm"
+  name        = var.vm-b-name
   sub_net     = azurerm_subnet.subbnet.id
   username    = var.username
   password    = var.password
 }
 
-module "vm3" {
+module "vm-c" {
   source      = "./modules/vm"
   resource_gr = azurerm_resource_group.rg.name
   location    = azurerm_resource_group.rg.location
-  name        = "workernode-vm-2"
+  name        = var.vm-c-name
   sub_net     = azurerm_subnet.subbnet.id
   username    = var.username
   password    = var.password
