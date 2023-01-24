@@ -1,0 +1,26 @@
+---
+- name: upload workernode setup script
+  ansible.builtin.copy:
+    src: k8sWorker.sh
+    dest: /tmp/k8sWorker.sh
+    mode: u+rwx,g+wr,o+rw
+
+- name: run workernode setup script
+  ansible.builtin.shell:
+    cmd: /tmp/k8sWorker.sh
+    chdir: /tmp
+    creates: .executed.txt
+  args:
+    executable: /bin/bash
+
+- name: upload join script /tmp/join-command.sh to worker node
+  ansible.builtin.copy:
+    src: /tmp/join-command.sh
+    dest: /tmp/join-command.sh
+    mode: u+rwx,g+wr,o+rw
+    
+- name: execute join command
+  ansible.builtin.shell: /tmp/join-command.sh
+  args:
+    executable: /bin/bash
+  become: true

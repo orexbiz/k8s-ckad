@@ -1,0 +1,6 @@
+---
+- name: list nodes
+  ansible.builtin.shell: kubectl get nodes -o wide
+  args:
+    executable: /bin/bash
+

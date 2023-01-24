@@ -1,0 +1,13 @@
+---
+- name: copy cluster admin configfile to tmp folder
+  ansible.builtin.shell:
+    cmd: |
+      cp /home/${USER}/.kube/config /tmp/k8s_config
+      chmod u+rw,g+rw,o+rw /tmp/k8s_config
+
+- name: fetch cluster admin configfile from tmp folder to local tmp folder
+  ansible.builtin.fetch:
+    flat: yes
+    src: /tmp/k8s_config
+    dest: /tmp/k8s_config
+

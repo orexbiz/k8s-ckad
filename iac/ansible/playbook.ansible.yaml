@@ -1,115 +1,19 @@
 ---
-- name: check connection
-  hosts: datacenter
-  tasks:
-    - name: Ping all hosts
-      ansible.builtin.ping:
+- hosts: all_nodes
+  roles:
+  - check_connection_to_infras
 
-- name: prepare configuration files
-  hosts: datacenter
-  tasks:
-    - name: download k8s config files
-      ansible.builtin.get_url:
-        url: https://training.linuxfoundation.org/cm/LFD259/LFD259_V2022-07-25_SOLUTIONS.tar.xz
-        dest: /tmp/k8s_confs.tar.xz
-        username: '{{NAME}}'
-        password: '{{PASSWD}}'
-    - name: Unarchive downloaded files
-      ansible.builtin.unarchive:
-        src: /tmp/k8s_confs.tar.xz
-        dest: /tmp
-        remote_src: yes
+- hosts: control_plane
+  roles:
+  - setup_control_plane
+  - k8s_status
+  - download_admin_k8sconfig
 
+- hosts: control_plane
+  roles:
+  - setup_worker_nodes
+  - k8s_status
 
-- name: adjustements for security requirements
-  hosts: datacenter
-  tasks:
-    - name: stop apparmor
-      ansible.builtin.systemd:
-        name: apparmor
-        state: stopped
-      become: yes
-
-- name: configure control-plane
-  hosts: control_plane
-  tasks:
-    - name: display content of directory /tmp/LFD259/SOLUTIONS/s_02
-      ansible.builtin.shell:
-        cmd: ls -al
-        chdir: /tmp/LFD259/SOLUTIONS/s_02    
-    - name: install tools kubeadm, kubelet
-      ansible.builtin.shell:
-        cmd: ./k8scp.sh
-        chdir: /tmp/LFD259/SOLUTIONS/s_02
-        creates: .executed.txt
-      args:
-        executable: /bin/bash
-
-- name: configure workload node
-  hosts: worker_nodes
-  tasks:
-    - name: display content of directory /tmp/LFD259/SOLUTIONS/s_02
-      ansible.builtin.shell:
-        cmd: ls -al
-        chdir: /tmp/LFD259/SOLUTIONS/s_02    
-    - name: install tools - kubelet
-      ansible.builtin.shell:
-        cmd: ./k8sWorker.sh
-        chdir: /tmp/LFD259/SOLUTIONS/s_02
-        creates: .executed.txt
-      args:
-        executable: /bin/bash
-
-- name: generate join command
-  hosts: control_plane
-  tasks:
-    - name: create script for joining the cluster
-      ansible.builtin.shell: 
-        cmd: |
-          echo "#!/bin/bash" > join-command.sh
-          kubeadm token create --print-join-command >> join-command.sh
-        chdir: /tmp
-      args:
-        executable: /bin/bash
-    - name: copy join script to local machine
-      ansible.builtin.fetch:
-        flat: yes
-        src: /tmp/join-command.sh
-        dest: /tmp/
-
-- name: make worker-node join cluster
-  hosts: worker_nodes
-  tasks:
-    - name: copy join-command.sh to worker nodes
-      ansible.builtin.copy:
-        src: /tmp/join-command.sh
-        dest: /tmp/join-command.sh
-        mode: u+rwx,g+wr,o+rw        
-    - name: execute join command
-      ansible.builtin.shell: /tmp/join-command.sh
-      args:
-        executable: /bin/bash
-      become: yes
-
-- name: display cluster state
-  hosts: control_plane
-  tasks:
-    - name: list nodes
-      ansible.builtin.shell: kubectl get nodes
-      args:
-        executable: /bin/bash
-
-- name: configure local kubernetes client
-  hosts: control_plane
-  tasks:
-    - name: copy cluster admin configfile to ~/.kube/config
-      ansible.builtin.shell:
-        cmd: |
-          cp /home/${USER}/.kube/config /tmp/k8s_config
-          chmod u+rw,g+rw,o+rw /tmp/k8s_config
-
-    - name: copy cluster admin configfile to ~/.kube/config
-      ansible.builtin.fetch:
-        flat: yes
-        src: /tmp/k8s_config
-        dest: /tmp/k8s_config
+- hosts: control_plane
+  roles:
+  - k8s_status

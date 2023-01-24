@@ -18,7 +18,7 @@ worker_nodes:
     ansible_ssh_pass: _USER_PASSWD_
     ansible_connection: ssh
 
-datacenter:
+all_nodes:
   children:
     control_plane:
     worker_nodes:

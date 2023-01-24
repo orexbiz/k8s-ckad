@@ -1,0 +1,30 @@
+---
+- name: upload k8s setup script
+  ansible.builtin.copy:
+    src: k8scp.sh
+    dest: /tmp/k8scp.sh
+    mode: u+rwx,g+wr,o+rw
+
+- name: run k8s setup script
+  ansible.builtin.shell:
+    cmd: ./k8scp.sh
+    chdir: /tmp
+    creates: .executed.txt
+  args:
+    executable: /bin/bash
+
+- name: create script containing the join command
+  ansible.builtin.shell: 
+    cmd: |
+      echo "#!/bin/bash" > join-command.sh
+      kubeadm token create --print-join-command >> join-command.sh
+    chdir: /tmp
+  args:
+    executable: /bin/bash
+    
+- name: copy join script to local machine
+  ansible.builtin.fetch:
+    flat: yes
+    src: /tmp/join-command.sh
+    dest: /tmp
+    fail_on_missing: true
